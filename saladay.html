@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saladay - Fresh African-Inspired Salads</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #006838;
+            --secondary-yellow: #F9A826;
+            --light-bg: #f8f9fa;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #005028;
+        }
+        .btn-secondary {
+            background-color: var(--secondary-yellow);
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #e09016;
+        }
+        .text-primary {
+            color: var(--primary-green);
+        }
+        .text-secondary {
+            color: var(--secondary-yellow);
+        }
+        .bg-primary {
+            background-color: var(--primary-green);
+        }
+        .bg-secondary {
+            background-color: var(--secondary-yellow);
+        }
+        .hero-section {
+            background-color: #f8f9fa;
+            padding: 100px 0;
+        }
+        .salad-card {
+            transition: transform 0.3s ease-in-out;
+        }
+        .salad-card:hover {
+            transform: translateY(-5px);
+        }
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            margin-right: 10px;
+        }
+        .cart-item {
+            transition: all 0.3s ease;
+        }
+        .saladay-logo-svg {
+            width: 100%;
+            height: auto;
+        }
+        #cartCount {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--secondary-yellow);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 50px 0;
+            }
+            .logo-container {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md py-4 fixed w-full z-10">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="logo-container">
+                    <svg class="saladay-logo-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M150,30 C95,30 50,75 50,130 C50,185 95,230 150,230 C205,230 250,185 250,130 C250,75 205,30 150,30 Z" fill="#006838"/>
+                        <path d="M160,80 C160,80 180,100 180,130 C180,160 160,180 160,180 C160,180 140,160 140,130 C140,100 160,80 160,80 Z" fill="#8DC63F"/>
+                        <path d="M120,90 C120,90 140,110 140,130 C140,150 120,170 120,170 C120,170 100,150 100,130 C100,110 120,90 120,90 Z" fill="#8DC63F"/>
+                        <path d="M220,100 C220,100 205,115 185,120 C165,125 150,140 150,140 C150,140 135,125 115,120 C95,115 80,100 80,100 C80,100 95,85 115,80 C135,75 150,60 150,60 C150,60 165,75 185,80 C205,85 220,100 220,100 Z" fill="#F9A826"/>
+                        <path d="M190,120 C190,120 200,130 200,140 C200,150 190,160 190,160 L180,150 C180,150 185,145 185,140 C185,135 180,130 180,130 L190,120 Z" fill="#F9A826"/>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold text-primary">Saladay</h1>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#menu" class="text-gray-600 hover:text-primary">Menu</a>
+                <a href="#about" class="text-gray-600 hover:text-primary">About</a>
+                <a href="#contact" class="text-gray-600 hover:text-primary">Contact</a>
+                <div class="relative">
+                    <button id="cartButton" class="text-gray-600 hover:text-primary">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cartCount" class="hidden">0</span>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden">
+                <button id="mobileMenuButton" class="text-gray-600">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 bg-white z-20 flex flex-col items-center justify-center space-y-8 hidden">
+        <button id="mobileMenuCloseButton" class="absolute top-4 right-4 text-gray-600">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+        <a href="#menu" class="text-gray-600 hover:text-primary text-xl">Menu</a>
+        <a href="#about" class="text-gray-600 hover:text-primary text-xl">About</a>
+        <a href="#contact" class="text-gray-600 hover:text-primary text-xl">Contact</a>
+        <button id="mobileCartButton" class="text-gray-600 hover:text-primary text-xl">
+            Cart (<span id="mobileCartCount">0</span>)
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section pt-24">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-primary mb-4">Saladay</h1>
+            <h2 class="text-2xl md:text-3xl font-semibold text-secondary mb-8">Fresh African-Inspired Salads</h2>
+            <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                Experience the vibrant flavors of Africa in our healthy, delicious salads.
+                Made with fresh ingredients and authentic recipes.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#menu" class="btn-primary px-6 py-3 rounded-full font-semibold">
+                    View Menu
+                </a>
+                <a href="#order" class="btn-secondary px-6 py-3 rounded-full font-semibold">
+                    Order Now
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-16 bg-light-bg">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">Our Menu</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Explore our selection of delicious African-inspired salads, crafted with fresh ingredients and authentic flavors.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Yam & Avocado Salad -->
+                <div class="salad-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                        <img src="/api/placeholder/400/320" alt="Yam & Avocado Salad" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-2">Yam & Avocado Salad</h3>
+                        <p class="text-gray-600 mb-4">
+                            Boiled or roasted yam cubes, sliced avocado, spiced groundnuts, a light lemon dressing
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-secondary">₦2,500</span>
+                            <button class="add-to-cart btn-primary px-4 py-2 rounded-full text-sm" 
+                                    data-id="1" 
+                                    data-name="Yam & Avocado Salad" 
+                                    data-price="2500">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jollof Salad -->
+                <div class="salad-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                        <img src="/api/placeholder/400/320" alt="Jollof Salad" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-2">Jollof Salad</h3>
+                        <p class="text-gray-600 mb-4">
+                            Chopped grilled chicken, cherry tomatoes, shredded lettuce, sweet corn, spicy tomato dressing
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-secondary">₦3,000</span>
+                            <button class="add-to-cart btn-primary px-4 py-2 rounded-full text-sm" 
+                                    data-id="2" 
+                                    data-name="Jollof Salad" 
+                                    data-price="3000">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Waakye Salad Bowl -->
+                <div class="salad-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                        <img src="/api/placeholder/400/320" alt="Waakye Salad Bowl" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-2">Waakye Salad Bowl</h3>
+                        <p class="text-gray-600 mb-4">
+                            Waakye base, black-eyed peas, smokedfish flakes, sauteed onions, local shito dressing
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-secondary">₦3,200</span>
+                            <button class="add-to-cart btn-primary px-4 py-2 rounded-full text-sm" 
+                                    data-id="3" 
+                                    data-name="Waakye Salad Bowl" 
+                                    data-price="3200">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grilled Plantain & Peanut Salad -->
+                <div class="salad-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                        <img src="/api/placeholder/400/320" alt="Grilled Plantain & Peanut Salad" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-2">Grilled Plantain & Peanut Salad</h3>
+                        <p class="text-gray-600 mb-4">
+                            Kelewele (spicy plantain) chunks, crushed roasted peanuts, cabbage slaw, tamarind dressing
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-secondary">₦2,800</span>
+                            <button class="add-to-cart btn-primary px-4 py-2 rounded-full text-sm" 
+                                    data-id="4" 
+                                    data-name="Grilled Plantain & Peanut Salad" 
+                                    data-price="2800">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coconut & Pineapple Salad -->
+                <div class="salad-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                        <img src="/api/placeholder/400/320" alt="Coconut & Pineapple Salad" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-2">Coconut & Pineapple Salad</h3>
+                        <p class="text-gray-600 mb-4">
+                            Shredded fresh coconut, grilled pineapple chunks, spinach & mint leaves, honey-lime dressing
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-secondary">₦2,700</span>
+                            <button class="add-to-cart btn-primary px-4 py-2 rounded-full text-sm" 
+                                    data-id="5" 
+                                    data-name="Coconut & Pineapple Salad" 
+                                    data-price="2700">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Special Weekly Salad -->
+                <div class="salad-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                        <img src="/api/placeholder/400/320" alt="Special Weekly Salad" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-primary mb-2">Chef's Special (Weekly)</h3>
+                        <p class="text-gray-600 mb-4">
+                            Ask about our weekly special - a unique creation featuring seasonal ingredients and innovative flavors
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold text-secondary">₦3,500</span>
+                            <button class="add-to-cart btn-primary px-4 py-2 rounded-full text-sm" 
+                                    data-id="6" 
+                                    data-name="Chef's Special (Weekly)" 
+                                    data-price="3500">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-primary mb-6">About Saladay</h2>
+                    <p class="text-gray-600 mb-4">
+                        At Saladay, we're passionate about bringing the rich, diverse flavors of African cuisine to a modern, health-conscious audience. Our mission is to create nutritious, delicious salads inspired by traditional recipes from across the continent.
+                    </p>
+                    <p class="text-gray-600 mb-4">
+                        We source our ingredients locally whenever possible, supporting small farmers and ensuring the freshest produce in every salad. Our dressings are made in-house daily, using authentic spices and recipes passed down through generations.
+                    </p>
+                    <p class="text-gray-600">
+                        Whether you're looking for a quick, healthy lunch or catering for your next event, Saladay offers a taste of Africa that nourishes both body and soul.
+                    </p>
+                </div>
+                <div class="flex justify-center">
+                    <div class="w-full max-w-md bg-light-bg rounded-lg p-8">
+                        <div class="text-center mb-6">
+                            <svg class="saladay-logo-svg w-24 h-24 mx-auto" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M150,30 C95,30 50,75 50,130 C50,185 95,230 150,230 C205,230 250,185 250,130 C250,75 205,30 150,30 Z" fill="#006838"/>
+                                <path d="M160,80 C160,80 180,100 180,130 C180,160 160,180 160,180 C160,180 140,160 140,130 C140,100 160,80 160,80 Z" fill="#8DC63F"/>
+                                <path d="M120,90 C120,90 140,110 140,130 C140,150 120,170 120,170 C120,170 100,150 100,130 C100,110 120,90 120,90 Z" fill="#8DC63F"/>
+                                <path d="M220,100 C220,100 205,115 185,120 C165,125 150,140 150,140 C150,140 135,125 115,120 C95,115 80,100 80,100 C80,100 95,85 115,80 C135,75 150,60 150,60 C150,60 165,75 185,80 C205,85 220,100 220,100 Z" fill="#F9A826"/>
+                                <path d="M190,120 C190,120 200,130 200,140 C200,150 190,160 190,160 L180,150 C180,150 185,145 185,140 C185,135 180,130 180,130 L190,120 Z" fill="#F9A826"/>
+                            </svg>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-xl font-bold text-primary mb-2">Our Values</h3>
+                            <ul class="text-gray-600 space-y-2">
+                                <li><i class="fas fa-leaf text-primary mr-2"></i> Fresh, quality ingredients</li>
+                                <li><i class="fas fa-heart text-primary mr-2"></i> Authentic African flavors</li>
+                                <li><i class="fas fa-globe text-primary mr-2"></i> Sustainable practices</li>
+                                <li><i class="fas fa-users text-primary mr-2"></i> Community support</li>
+                                <li><i class="fas fa-utensils text-primary mr-2"></i> Culinary innovation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Order Section -->
+    <section id="order" class="py-16 bg-light-bg">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">Place Your Order</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Ready to enjoy our delicious salads? Order online for pickup or delivery.
+                </p>
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-primary mb-6">Your Order</h3>
+                    <div id="cartItems" class="space-y-4 mb-8">
+                        <p id="emptyCartMessage" class="text-gray-500 text-center py-4">Your cart is empty. Please add items from our menu.</p>
+                    </div>
+                    <div id="cartTotal" class="border-t border-gray-200 pt-4 mb-6 hidden">
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-semibold">Subtotal:</span>
+                            <span id="subtotalAmount" class="text-lg font-bold text-primary">₦0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-semibold">Delivery Fee
